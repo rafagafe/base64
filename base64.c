@@ -19,13 +19,13 @@
 
 #include "base64.h"
 
-/** */
+/** Escape values. */
 enum special_e {
     notabase64 = 64, /**< Value to return when a non base64 digit is found. */
     terminator = 65, /**< Value to return when the character '=' is found.  */
 };
 
-/** Look at table that converts a base64 digit to integer. */
+/** Lookup table that converts a base64 digit to integer. */
 static unsigned char const digittobin[] = {
     64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
     64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
@@ -83,7 +83,7 @@ void* b64tobin( void* dest, char const* src ) {
     return p;
 }
 
-/** Look at table that converts a integer to base64 digit. */
+/** Lookup table that converts a integer to base64 digit. */
 static char const bintodigit[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                  "abcdefghijklmnopqrstuvwxyz"
                                  "0123456789"

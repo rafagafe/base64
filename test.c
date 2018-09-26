@@ -19,9 +19,8 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
-#include <stdint.h>
 #include "base64.h"
+
 
 // ----------------------------------------------------- Test "framework": ---
 
@@ -59,7 +58,7 @@ static int test_suit( struct test const* tests, int numtests ) {
 static int wikiExample( void ) {
 
     static char const src[] = "any carnal pleasure.";
-    unsigned int const srclen  = sizeof src - 1;
+    int const srclen  = sizeof src - 1;
 
     char buffer[32];
     bintob64( buffer, src, srclen );
@@ -87,13 +86,13 @@ static int allDigits( void ) {
                                  "0123456789"
                                  "+/";
 
-    unsigned char binary[72];
-    unsigned char* const end = b64tobin( binary, digits );
+    char binary[72];
+    char* const end = b64tobin( binary, digits );
     check( end );
 
-    unsigned int const binarylen = end - binary;
-    unsigned int const digitslen = sizeof digits - 1;
-    unsigned int const calclen   = 3 * digitslen / 4;
+    int const binarylen = end - binary;
+    int const digitslen = sizeof digits - 1;
+    int const calclen   = 3 * digitslen / 4;
     check( binarylen == calclen );
 
     char base64[72];
@@ -124,20 +123,20 @@ static int aliasing ( void ) {
 
 static int sizes( void ) {
     char binary[6];
-    for( unsigned int i = 1; i < sizeof binary; ++i )
+    for( int i = 1; i < sizeof binary; ++i )
         binary[i] = i;
 
     char base64[24];
     for( unsigned int i = 1; i < sizeof binary; ++i ) {
         char* const b64end = bintob64( base64, binary, i );
-        unsigned int const b64len = b64end - base64;
-        unsigned int const expectedLen = 4 * ( 1 + i / 4 );
+        int const b64len = b64end - base64;
+        int const expectedLen = 4 * ( 1 + i / 4 );
         check( b64len == expectedLen );
         char* binend = b64decode( base64 );
         check( binend );
-        unsigned int const binlen = binend - base64;
+        int const binlen = binend - base64;
         check( binlen == i );
-        bool const equal = !memcmp( binary, base64, i );
+        int const equal = 0 == memcmp( binary, base64, i );
         check( equal );
     }
     done();
@@ -146,29 +145,29 @@ static int sizes( void ) {
 int badformats( void ) {
     {
         static char const base64[] = { 0 };
-        uint8_t binary[5];
-        uint8_t* end = b64tobin( binary, base64 );
+        char binary[5];
+        char* end = b64tobin( binary, base64 );
         check( end == binary );
     }
     {
         static char const base64[] = { 'a', 'a', -5, 'a', 0 };
-        uint8_t binary[5];
-        uint8_t* end = b64tobin( binary, base64 );
+        char binary[5];
+        char* end = b64tobin( binary, base64 );
         check( !end );
     }
     {
-        uint8_t binary[5];
-        uint8_t* end = b64tobin( binary, "aaaa_" );
+        char binary[5];
+        char* end = b64tobin( binary, "aaaa_" );
         check( end - binary == 3 );
     }
     {
-        uint8_t binary[5];
-        uint8_t* end = b64tobin( binary, "aa_" );
+        char binary[5];
+        char* end = b64tobin( binary, "aa_" );
         check( !end );
     }
     {
-        uint8_t binary[5];
-        uint8_t* end = b64tobin( binary, "=aaaa_" );
+        char binary[5];
+        char* end = b64tobin( binary, "=aaaa_" );
         check( end == binary );
     }
     done();

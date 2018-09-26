@@ -26,7 +26,7 @@ enum special_e {
 };
 
 /** Lookup table that converts a base64 digit to integer. */
-static unsigned char const digittobin[] = {
+static char const digittobin[] = {
     64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
     64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
     64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 62, 64, 64, 64, 63,
@@ -49,34 +49,34 @@ static unsigned char const digittobin[] = {
 /* Convert a base64 null-terminated string to binary format.*/
 void* b64tobin( void* dest, char const* src ) {
     unsigned char const* s = (unsigned char*)src;
-    unsigned char* p = (unsigned char*)dest;
+    char* p = dest;
     for(;;) {
 
-        unsigned int const a = digittobin[ *s ];
+        int const a = digittobin[ *s ];
         if ( a == notabase64 ) return p;
         if ( a == terminator ) return p;
 
-        unsigned int const b = digittobin[ *++s ];
+        int const b = digittobin[ *++s ];
         if ( b == notabase64 ) return 0;
         if ( b == terminator ) return 0;
 
-        *p++ = ( a << 2 ) | ( b >> 4 );
+        *p++ = ( a << 2u ) | ( b >> 4u );
 
-        unsigned int const c = digittobin[ *++s ];
+        int const c = digittobin[ *++s ];
         if ( c == notabase64 ) return 0;
 
-        unsigned int const d = digittobin[ *++s ];
+        int const d = digittobin[ *++s ];
         if ( d == notabase64 ) return 0;
         if ( c == terminator ) {
             if ( d != terminator ) return 0;
             return p;
         }
 
-        *p++ = ( b << 4 ) | ( c >> 2 );
+        *p++ = ( b << 4u ) | ( c >> 2u );
 
         if ( d == terminator ) return p;
 
-        *p++ = ( c << 6 ) | ( d >> 0 );
+        *p++ = ( c << 6u ) | ( d >> 0u );
         ++s;
     }
     
@@ -92,8 +92,8 @@ static char const bintodigit[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 /** Get the first base 64 digit of a block of 4.
   * @param a The first byte of the source block of 3.
   * @return A base 64 digit. */
-static unsigned int get0( unsigned int a ) {
-    unsigned int const index = a >> 2;
+static int get0( int a ) {
+    int const index = a >> 2u;
     return bintodigit[ index ];
 }
 
@@ -101,10 +101,10 @@ static unsigned int get0( unsigned int a ) {
   * @param a The first byte of the source block of 3.
   * @param b The second byte of the source block of 3.
   * @return A base 64 digit. */
-static unsigned int get1( unsigned int a, unsigned int b ) {
-    unsigned int const indexA = ( a & 0b11 ) << 4;
-    unsigned int const indexB = b >> 4;
-    unsigned int const index  = indexA | indexB;
+static int get1( int a, int b ) {
+    int const indexA = ( a & 0b11 ) << 4u;
+    int const indexB = b >> 4u;
+    int const index  = indexA | indexB;
     return bintodigit[ index ];
 }
 
@@ -113,17 +113,17 @@ static unsigned int get1( unsigned int a, unsigned int b ) {
   * @param c The third byte of the source block of 3.
   * @return A base 64 digit. */
 static unsigned int get2( unsigned int b, unsigned int c ) {
-    unsigned int const indexB = ( b & 0b1111 ) << 2;
-    unsigned int const indexC = c >> 6;
-    unsigned int const index  = indexB | indexC;
+    int const indexB = ( b & 0b1111 ) << 2u;
+    int const indexC = c >> 6u;
+    int const index  = indexB | indexC;
     return bintodigit[ index ];
 }
 
 /** Get the fourth base 64 digit of a block of 4.
   * @param c The third byte of the source block of 3.
   * @return A base 64 digit. */
-static unsigned int get3( unsigned int c ) {
-    unsigned int const index = c & 0x3f;
+static int get3( int c ) {
+    int const index = c & 0x3f;
     return bintodigit[ index ];
 }
 

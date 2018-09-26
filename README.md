@@ -1,4 +1,6 @@
 # Base64
+[![Build Status](https://travis-ci.org/rafagafe/base64.svg?branch=master)](https://travis-ci.org/rafagafe/base64)
+
 Base64 is a C library to convert from plain to base64 and vice versa suitable for embedded systems.
 
 # API

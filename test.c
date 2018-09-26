@@ -59,7 +59,7 @@ static int test_suit( struct test const* tests, int numtests ) {
 }
 
 
-// ----------------------------------------------------- Helper functions: ---
+// ----------------------------------------------------------- Unit tests: ---
 
 static int wikiExample( void ) {
 

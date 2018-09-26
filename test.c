@@ -133,7 +133,7 @@ static int sizes( void ) {
         binary[i] = i;
 
     char base64[24];
-    for( unsigned int i = 1; i < sizeof binary; ++i ) {
+    for( int i = 1; i < sizeof binary; ++i ) {
         char* const b64end = bintob64( base64, binary, i );
         int const b64len = b64end - base64;
         int const expectedLen = 4 * ( 1 + i / 4 );

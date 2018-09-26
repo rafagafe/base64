@@ -23,13 +23,38 @@
 #include <stdint.h>
 #include "base64.h"
 
+// ----------------------------------------------------- Test "framework": ---
+
 #define done() return 0
-
 #define fail() return __LINE__
+static int checkqty = 0;
+#define check( x ) do { ++checkqty; if (!(x)) fail(); } while ( 0 )
 
-static unsigned int checkqty = 0;
+struct test {
+    int(*func)(void);
+    char const* name;
+};
 
-#define check( x ) { ++checkqty; if (!(x)) fail(); }
+static int test_suit( struct test const* tests, int numtests ) {
+    printf( "%s", "\n\nTests:\n" );
+    int failed = 0;
+    for( int i = 0; i < numtests; ++i ) {
+        printf( " %02d%s%-25s ", i, ": ", tests[i].name );
+        int linerr = tests[i].func();
+        if ( 0 == linerr )
+            printf( "%s", "OK\n" );
+        else {
+            printf( "%s%d\n", "Failed, line: ", linerr );
+            ++failed;
+        }
+    }
+    printf( "\n%s%d\n", "Total checks: ", checkqty );
+    printf( "%s[ %d / %d ]\r\n\n\n", "Tests PASS: ", numtests - failed, numtests );
+    return failed;
+}
+
+
+// ----------------------------------------------------- Helper functions: ---
 
 static int wikiExample( void ) {
 
@@ -149,34 +174,16 @@ int badformats( void ) {
     done();
 }
 
-struct test {
-    int(*func)(void);
-    char const* name;
-};
 
-static int test_exec( struct test const* test ) {
-    int const err = test->func();
-    if ( err ) {
-        fprintf( stderr, "%s%s%s%d%s", "Failed test: '", test->name, "' Line: ", err, ".\n" );
-        return 1;
-    }
-    return 0;
-}
-
-static struct test const tests[] = {
-    { wikiExample, "Wikipedia example" },
-    { allDigits,   "All digits"        },
-    { aliasing,    "Aliasing"          },
-    { sizes,       "Sizes"             },
-    { badformats,  "Bad Formats"       },
-};
+// --------------------------------------------------------- Execute tests: ---
 
 int main( void ) {
-    int failed = 0;
-    unsigned int const qty = sizeof tests / sizeof *tests;
-    for( unsigned int i = 0; i < qty; ++i )
-        failed += test_exec( tests + i );
-    unsigned int const percent = 100.0 * ( qty - failed ) / qty;
-    printf( "%d%s%d%s", percent, "%. ", checkqty, " checks.\n" );
-    return failed;
+    static struct test const tests[] = {
+        { wikiExample, "Wikipedia example" },
+        { allDigits,   "All digits"        },
+        { aliasing,    "Aliasing"          },
+        { sizes,       "Sizes"             },
+        { badformats,  "Bad Formats"       }
+    };
+    return test_suit( tests, sizeof tests / sizeof *tests );
 }

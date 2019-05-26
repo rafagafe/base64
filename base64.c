@@ -108,7 +108,7 @@ static int get0( int a ) {
   * @param b The second byte of the source block of 3.
   * @return A base 64 digit. */
 static int get1( int a, int b ) {
-    int const indexA = ( a & 0b11 ) << 4u;
+    int const indexA = ( a & 3 ) << 4u;
     int const indexB = b >> 4u;
     int const index  = indexA | indexB;
     return bintodigit[ index ];
@@ -119,7 +119,7 @@ static int get1( int a, int b ) {
   * @param c The third byte of the source block of 3.
   * @return A base 64 digit. */
 static unsigned int get2( unsigned int b, unsigned int c ) {
-    int const indexB = ( b & 0b1111 ) << 2u;
+    int const indexB = ( b & 15 ) << 2u;
     int const indexC = c >> 6u;
     int const index  = indexB | indexC;
     return bintodigit[ index ];

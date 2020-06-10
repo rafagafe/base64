@@ -35,6 +35,20 @@ extern "C" {
 /** @defgroup base64 Base64 Converter.
   * @{ */
 
+/** Get size required for encoding base64 null-terminated string.
+  * @param size Size in bytes of source binary memory block.
+  * @return A size of required for result of base64 encoding */  
+inline int bintob64_size(int size)
+{
+   return (int)(size * 4 / 3.0) + 6;
+}
+/** Get size required for decoding base64 null-terminated string.
+  * @param size Size in bytes of source base64 memory block.
+  * @return A size of required for result of base64 decoding */
+inline int b64tobin_size(int size)
+{
+   return (int)(size * 3 / 4.0) + 6;
+}
 /** Convert a binary memory block in a base64 null-terminated string.
   * @param dest Destination memory wher to put the base64 null-terminated string.
   * @param src Source binary memory block.

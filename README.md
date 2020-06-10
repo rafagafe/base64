@@ -5,17 +5,17 @@ Base64 is a C library to convert from plain to base64 and vice versa suitable fo
 
 # API
 
-/** Get size required for encoding base64 null-terminated string.
-  * @param size Size in bytes of source binary memory block.
-  * @return A size of required for result of base64 encoding */
+ * Get size required for encoding base64 null-terminated string.
+ * @param size Size in bytes of source binary memory block.
+ * @return A size of required for result of base64 encoding 
 
 ```C
 int bintob64_size(int size);
 ```
 
-/** Get size required for decoding base64 null-terminated string.
-  * @param size Size in bytes of source base64 memory block.
-  * @return A size of required for result of base64 decoding */
+ * Get size required for decoding base64 null-terminated string.
+ * @param size Size in bytes of source base64 memory block.
+ * @return A size of required for result of base64 decoding 
 
 ```C
 int b64tobin_size(int size);
